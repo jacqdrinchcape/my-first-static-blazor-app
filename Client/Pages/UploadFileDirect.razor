@@ -57,7 +57,7 @@
         {
             using (StreamContent streamContent = new StreamContent(file.Data))
             {
-                var response = await Http.PostAsync("https://uploadfileblobfunc20211216170445.azurewebsites.net/api/UploadFileBlobFunc?code=R2FOm3KOMyvZ1krWxyAl90VZDIWw8sYFdMNH7LfmW7nLmCbKQA7XCw==", streamContent);
+                var response = await Http.PostAsync("https://uploadfileblobfuncv1.azurewebsites.net/api/UploadFileBlobFunc?code=3Jabr/MaYNK9c8hkBxjQwRo6zM53AV3TWFFuRNc6bfwAyqaGALScGg==", streamContent);
                 if (response.IsSuccessStatusCode)
                 {
                     _fileUploadCount++;
