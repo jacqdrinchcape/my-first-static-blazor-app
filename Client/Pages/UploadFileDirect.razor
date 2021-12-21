@@ -1,0 +1,73 @@
+﻿@page "/uploadfiledirect"
+@using BlazorInputFile;
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h1>Upload file</h1>
+
+<p>This component demonstrates uploading a file to Azure blob storage.</p>
+
+@if (_fileUploadCount > 0)
+{
+    <p>
+        File upload count: @_fileUploadCount
+    </p>
+}
+
+<div style="@(!_uploadingFile ? "display:none" : "display:inline")">
+    <p>
+        <em>Uploading...</em>
+    </p>
+</div>
+
+<div style="@(!string.IsNullOrEmpty(_uploadError) ? "display:inline" : "display:none")">
+    <p>
+        <em>@_uploadError </em>
+    </p>
+</div>
+
+<div style="@(_uploadingFile ? "display:none" : "display:inline")">
+    <label for="inputControl" class="btn btn-primary btn-block btn-outlined">Choose file</label>
+    <BlazorInputFile.InputFile id="inputControl" OnChange="HandleChangeSelected" capture="camera" accept=".csv" style="display: none" multiple />
+
+    <div style="@(_files?.Any() != null ? "display:inline" : "display:none")">
+        <label for="uploadButton" class="btn btn-primary btn-block btn-outlined">Upload file</label>
+        <input id="uploadButton" type="button" value="Upload file" @onclick="FileUpload" class="btn btn-primary" style="display: none" />
+    </div>
+</div>
+
+@code {
+
+    private IFileListEntry _file;
+    private IFileListEntry[] _files;
+    private int _fileUploadCount = 0;
+    private string _uploadError = null;
+    private bool _uploadingFile = false;
+
+    private void HandleChangeSelected(IFileListEntry[] files)
+    {
+        _files = files;
+    }
+
+    private async Task FileUpload()
+    {
+        _uploadingFile = true;
+
+        foreach (var file in _files)
+        {
+            using (StreamContent streamContent = new StreamContent(file.Data))
+            {
+                var response = await Http.PostAsync("https://uploadfileblobfunc20211216170445.azurewebsites.net/api/UploadFileBlobFunc?code=R2FOm3KOMyvZ1krWxyAl90VZDIWw8sYFdMNH7LfmW7nLmCbKQA7XCw==", streamContent);
+                if (response.IsSuccessStatusCode)
+                {
+                    _fileUploadCount++;
+                }
+                else
+                {
+                    _uploadError = $"Error: {await response.Content.ReadAsStringAsync()}";
+                }
+            }
+        }
+        _uploadingFile = false;
+    }
+}
