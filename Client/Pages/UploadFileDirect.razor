@@ -57,7 +57,9 @@
         {
             using (StreamContent streamContent = new StreamContent(file.Data))
             {
-                var response = await Http.PostAsync("https://uploadfileblobfuncv1.azurewebsites.net/api/UploadFileBlobFunc?code=3Jabr/MaYNK9c8hkBxjQwRo6zM53AV3TWFFuRNc6bfwAyqaGALScGg==", streamContent);
+                //var response = await Http.PostAsync("https://uploadfileblobfuncv1.azurewebsites.net/api/UploadFileBlobFunc?code=3Jabr/MaYNK9c8hkBxjQwRo6zM53AV3TWFFuRNc6bfwAyqaGALScGg==", streamContent);
+                var response = await Http.PostAsync("https://devasphttptrigger.azurewebsites.net/api/UploadSparePartStocksFileFunc?code=zHrevEeWCiaD0k8fSejlUkTKUDlxZmidovuGxud6By/2p6Peiatujg==", streamContent);
+                
                 if (response.IsSuccessStatusCode)
                 {
                     _fileUploadCount++;
