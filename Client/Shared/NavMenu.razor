@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Static Web Apps</a>
+        <a class="navbar-brand" href="">Aspiradora</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,7 +9,7 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
+    @*    <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
@@ -23,13 +23,38 @@
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
+        </div>*@
+          
+           <div class="nav-item px-3">
+            <NavLink class="nav-link" href="uploadvehiclesales">
+                <span class="oi oi-list-rich" aria-hidden="true"></span>Vehicle Sales
+            </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="uploadfiledirect">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Upload file
+            <NavLink class="nav-link" href="uploadworkorders">
+                <span class="oi oi-list-rich" aria-hidden="true"></span>Work Orders
             </NavLink>
         </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="uploadworkorderspareparts">
+                <span class="oi oi-list-rich" aria-hidden="true"></span>WO Spare Parts
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="uploadsparepartsales">
+                <span class="oi oi-list-rich" aria-hidden="true"></span>Spare Part Sales
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="uploadsparepartstocks">
+                <span class="oi oi-list-rich" aria-hidden="true"></span>Spare Part Stocks
+            </NavLink>
+        </div>
+        
         
     </nav>
 </div>

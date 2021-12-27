@@ -2,7 +2,13 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "blobConnectionString": "DefaultEndpointsProtocol=https;AccountName=azsbrbrstdevasp01;AccountKey=57H7M31bF8zNgveT793jsm/fQLSxjuIABr7YaU0ED17FUl4hfL8pLRXwbWJC2COoDY0G9ZxJLN0uD1D3IQWIlA==;EndpointSuffix=core.windows.net",
+    "blobvehiclesalesStorageContainer": "vehicle-sales",
+    "blobworkordersStorageContainer": "work-orders",
+    "blobworkordersparepartsStorageContainer": "workorder-spareparts",
+    "blobsparepartsalesStorageContainer": "sparepart-sales",
+    "blobsparepartstockStorageContainer": "sparepart-stock"
   },
   "Host": {
     "LocalHttpPort": 7071,

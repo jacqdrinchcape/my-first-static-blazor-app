@@ -17,10 +17,10 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 
 
-// Supply HttpClient instances that include access tokens when making requests to the server project
+//Supply HttpClient instances that include access tokens when making requests to the server project
 //builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BlazorStaticWebApps.ServerAPI"));
 
-builder.Services.AddTransient(_ => { return configuration.GetSection("GalaxyStuff").Get<GalaxyInfo>(); });
+builder.Services.AddTransient(_ => { return configuration.GetSection("Settings").Get<Settings>(); });
 
 builder.Services.AddMsalAuthentication(options =>
 {
