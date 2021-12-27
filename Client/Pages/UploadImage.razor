@@ -1,0 +1,156 @@
+﻿@page "/uploadimage"
+@using BlazorInputFile
+@inject HttpClient Http
+ 
+<div class="row">
+ 
+        <label for="uploadButton" class="btn btn-primary btn-block btn-outlined">Upload file</label>
+        <input id="uploadButton" type="button" value="Upload file" @onclick="FileUpload" class="btn btn-primary" style="display: none" />
+    </div>
+    <div class="col-12 p-0">
+        <div class="dropzone @dropClass rounded">
+            <BlazorInputFile.InputFile id="fileInput" multiple title=""
+                       OnChange="HandleFileInputChange"
+                       accept=".csv"
+                       @ondragenter="HandleDragEnter"
+                       @ondragleave="HandleDragLeave" />
+            Upload csv files
+        </div>
+     
+        @if (_fileUploadCount > 0)
+{
+    <p>
+        File upload count: @_fileUploadCount
+    </p>
+}
+
+<div style="@(!_uploadingFile ? "display:none" : "display:inline")">
+    <p>
+        <em>Uploading...</em>
+    </p>
+</div>
+
+<div style="@(!string.IsNullOrEmpty(_uploadError) ? "display:inline" : "display:none")">
+    <p>
+        <em>@_uploadError </em>
+    </p>
+</div>
+
+
+        @if ((fileTypeError || fileSizeError))
+        {
+            <ul class="validation-errors mb-0">
+                @if (fileTypeError)
+                {
+                    <li class="validation-message">Only csv files are accepted.</li>
+                }
+                @if (fileSizeError)
+                {
+                    <li class="validation-message">The max file size is @MaxFileSizeMB MB.</li>
+                }
+            </ul>
+        }
+        @if (selectedFiles != null && selectedFiles.Count > 0)
+        {
+            <div class="col-12">
+                <ul>
+                    @foreach (var file in selectedFiles)
+                    {
+                        <li>
+                            @file.Name
+                            <button class="btn btn-link text-danger p-0 pl-1" type="button"
+                                    @onclick="@(e => RemoveFile(file))">
+                                <small class="align-text-bottom">Remove</small>
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+
+@code {
+
+    private int _fileUploadCount = 0;
+    private string _uploadError = null;
+    private bool _uploadingFile = false;
+
+    const int MaxFileSizeMB = 5;
+    const int MaxFileSize = MaxFileSizeMB * 1024 * 1024; // 5MB
+    private string dropClass = "";
+    private bool fileSizeError = false;
+    private bool fileTypeError = false;
+    private List<IFileListEntry> selectedFiles = new List<IFileListEntry>();
+ 
+    private void HandleDragEnter()
+    {
+        dropClass = "dropzone-drag";
+    }
+ 
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+ 
+    private async Task HandleFileInputChange(IFileListEntry[] files)
+    {
+        dropClass = "";
+        fileSizeError = false;
+        fileTypeError = false;
+        List<string> acceptedFileTypes = new List<string>() { ".csv" };
+        if (files != null)
+        {
+            foreach (var file in files)
+            {
+                bool error = false;
+                if (file.Size > MaxFileSize)
+                {
+                    error = true;
+                    fileSizeError = true;
+                }
+ 
+                //if (!acceptedFileTypes.Contains(file.Type))
+                //{
+                //    error = true;
+                //    fileTypeError = true;
+                //}
+ 
+                //keep the good files
+                if (!error)
+                {
+                    selectedFiles.Add(file);
+                }
+            }
+        }
+    }
+ 
+    private void RemoveFile(IFileListEntry file)
+    {
+        selectedFiles.Remove(file);
+    }
+
+
+     private async Task FileUpload()
+    {
+        _uploadingFile = true;
+
+        foreach (var file in selectedFiles)
+        {
+            using (StreamContent streamContent = new StreamContent(file.Data))
+            {
+                //var response = await Http.PostAsync("https://uploadfileblobfuncv1.azurewebsites.net/api/UploadFileBlobFunc?code=3Jabr/MaYNK9c8hkBxjQwRo6zM53AV3TWFFuRNc6bfwAyqaGALScGg==", streamContent);
+                var response = await Http.PostAsync("https://devasphttptrigger.azurewebsites.net/api/UploadSparePartStocksFileFunc?code=zHrevEeWCiaD0k8fSejlUkTKUDlxZmidovuGxud6By/2p6Peiatujg==", streamContent);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    _fileUploadCount++;
+                }
+                else
+                {
+                    _uploadError = $"Error: {await response.Content.ReadAsStringAsync()}";
+                }
+            }
+        }
+        _uploadingFile = false;
+    }
+}
