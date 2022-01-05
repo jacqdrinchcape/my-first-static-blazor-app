@@ -1,5 +1,6 @@
 ﻿@page "/uploadworkorderspareparts"
 @using BlazorInputFile;
+@using System.Text
 @inject HttpClient Http
 @inject Settings Settings
 @attribute [Authorize]
@@ -13,15 +14,28 @@
     </p>
 }
 
+@if (_uploadErrorCount > 0)
+{
+    <p>
+        File upload failed count: @_uploadErrorCount
+    </p>
+}
+
 <div style="@(!_uploadingFile ? "display:none" : "display:inline")">
     <p>
         <em>Uploading...</em>
     </p>
 </div>
 
-<div style="@(!string.IsNullOrEmpty(_uploadError) ? "display:inline" : "display:none")">
+@*<div style="@(!string.IsNullOrEmpty(_uploadError) ? "display:inline" : "display:none")">
     <p>
         <em>@_uploadError </em>
+    </p>
+</div>*@
+
+<div style="@(!string.IsNullOrEmpty(listofFailedUpload.ToString()) ? "display:inline" : "display:none")">
+    <p>
+        <em>@listofFailedUpload.ToString() </em>
     </p>
 </div>
 
@@ -80,6 +94,9 @@
     private IFileListEntry _file;
     private int _fileUploadCount = 0;
     private string _uploadError = null;
+    
+    StringBuilder listofFailedUpload = new StringBuilder();
+    private int _uploadErrorCount = 0;
     private bool _uploadingFile = false;
 
     private List<IFileListEntry> _files = new List<IFileListEntry>();
@@ -141,7 +158,10 @@
                 }
                 else
                 {
-                    _uploadError = $"Error: {await response.Content.ReadAsStringAsync()}";
+                   _uploadError = $"Error: {await response.Content.ReadAsStringAsync()}";
+                   _uploadErrorCount++;
+                   listofFailedUpload.AppendFormat("Error:{0} {1}",file.Name, await response.Content.ReadAsStringAsync());
+                   listofFailedUpload.AppendLine();
                 }
             }
         }

@@ -22,29 +22,28 @@ namespace BlazorApp.Api
 
             try
             {
-                var container = GetContainer();
-                string fileName = $"{Guid.NewGuid().ToString()}.csv";
-                var blob = container.GetBlobClient(fileName);
-                await blob.UploadAsync(req.Body);
+                int isValidDocument = await Shared.Helper.VerifyDocument(req.Body, Shared.Helper.DocumentType.VehicleSales.ToString());
+
+                if (isValidDocument == 0)
+                {
+                    var container = Shared.Helper.GetContainer("blobvehiclesalesStorageContainer");
+                    string fileName = $"{Guid.NewGuid().ToString()}.csv";
+                    var blob = container.GetBlobClient(fileName);
+
+                    req.Body.Position = 0;
+                    await blob.UploadAsync(req.Body);
+                }
+                else
+                {
+                    return new BadRequestObjectResult(Shared.Helper.ErrorMessage(isValidDocument));
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new BadRequestObjectResult("Error uploading file");
+                return new BadRequestObjectResult(e.Message.ToString());
             }
 
             return new OkObjectResult("ok");
         }
-
-        #region helper
-        private static BlobContainerClient GetContainer()
-        {
-            var blobConnectionString = Environment.GetEnvironmentVariable("blobConnectionString");
-            var blobvehiclesalesStorageContainer = Environment.GetEnvironmentVariable("blobvehiclesalesStorageContainer");
-            var container = new BlobContainerClient(blobConnectionString, blobvehiclesalesStorageContainer);
-            container.CreateIfNotExists();
-
-            return container;
-        }
-        #endregion
     }
 }

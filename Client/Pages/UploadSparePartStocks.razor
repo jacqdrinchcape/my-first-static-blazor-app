@@ -164,7 +164,8 @@
                 {
                     _uploadError = $"Error: {await response.Content.ReadAsStringAsync()}";
                     _uploadErrorCount++;
-                   listofFailedUpload.AppendFormat("Error:{0} {1} {2}\n",file.Name, await response.Content.ReadAsStringAsync(), Environment.NewLine);
+                   listofFailedUpload.AppendFormat("Error:{0} {1}",file.Name, await response.Content.ReadAsStringAsync());
+                   listofFailedUpload.AppendLine();
                 }
             }
         }

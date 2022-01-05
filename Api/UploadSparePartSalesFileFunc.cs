@@ -22,35 +22,28 @@ namespace BlazorApp.Api
 
             try
             {
-                var container = GetContainer();
-                string fileName = $"{Guid.NewGuid().ToString()}.csv";
-                var blob = container.GetBlobClient(fileName);
-                await blob.UploadAsync(req.Body);
+                int isValidDocument = await Shared.Helper.VerifyDocument(req.Body, Shared.Helper.DocumentType.SparePartSales.ToString());
+
+                if (isValidDocument == 0)
+                {
+                    var container = Shared.Helper.GetContainer("blobsparepartsalesStorageContainer");
+                    string fileName = $"{Guid.NewGuid().ToString()}.csv";
+                    var blob = container.GetBlobClient(fileName);
+
+                    req.Body.Position = 0;
+                    await blob.UploadAsync(req.Body);
+                }
+                else
+                {
+                    return new BadRequestObjectResult(Shared.Helper.ErrorMessage(isValidDocument));
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new BadRequestObjectResult("Error uploading file");
+                return new BadRequestObjectResult(e.Message.ToString());
             }
 
             return new OkObjectResult("ok");
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            //return new OkObjectResult(responseMessage);
         }
-
-        #region helper
-        private static BlobContainerClient GetContainer()
-        {
-            var blobConnectionString = Environment.GetEnvironmentVariable("blobConnectionString");
-            var blobsparepartsalesStorageContainer = Environment.GetEnvironmentVariable("blobsparepartsalesStorageContainer");
-            var container = new BlobContainerClient(blobConnectionString, blobsparepartsalesStorageContainer);
-            container.CreateIfNotExists();
-
-            return container;
-        }
-        #endregion
     }
 }

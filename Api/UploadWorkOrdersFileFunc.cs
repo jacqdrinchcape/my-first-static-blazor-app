@@ -22,29 +22,28 @@ namespace BlazorApp.Api
 
             try
             {
-                var container = GetContainer();
-                string fileName = $"{Guid.NewGuid().ToString()}.csv";
-                var blob = container.GetBlobClient(fileName);
-                await blob.UploadAsync(req.Body);
+                int isValidDocument = await Shared.Helper.VerifyDocument(req.Body, Shared.Helper.DocumentType.WorkOrders.ToString());
+
+                if (isValidDocument == 0)
+                {
+                    var container = Shared.Helper.GetContainer("blobworkordersStorageContainer");
+                    string fileName = $"{Guid.NewGuid().ToString()}.csv";
+                    var blob = container.GetBlobClient(fileName);
+
+                    req.Body.Position = 0;
+                    await blob.UploadAsync(req.Body);
+                }
+                else
+                {
+                    return new BadRequestObjectResult(Shared.Helper.ErrorMessage(isValidDocument));
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new BadRequestObjectResult("Error uploading file");
+                return new BadRequestObjectResult(e.Message.ToString());
             }
 
             return new OkObjectResult("ok");
         }
-
-        #region helper
-        private static BlobContainerClient GetContainer()
-        {
-            var blobConnectionString = Environment.GetEnvironmentVariable("blobConnectionString");
-            var blobworkordersStorageContainer = Environment.GetEnvironmentVariable("blobworkordersStorageContainer");
-            var container = new BlobContainerClient(blobConnectionString, blobworkordersStorageContainer);
-            container.CreateIfNotExists();
-
-            return container;
-        }
-        #endregion
     }
 }

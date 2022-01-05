@@ -24,7 +24,7 @@ namespace BlazorApp.Api
 
             try
             {
-                int isValidDocument = await Shared.Helper.VerifyDocument(req.Body, "documenttypesparepartstock");
+                int isValidDocument = await Shared.Helper.VerifyDocument(req.Body, Shared.Helper.DocumentType.SparePartStock.ToString());
                 
                 if (isValidDocument == 0)
                 {
@@ -48,50 +48,5 @@ namespace BlazorApp.Api
             return new OkObjectResult("ok");
         }
 
-     
-        #region helper
-        //private static BlobContainerClient GetContainer()
-        //{
-        //    var blobConnectionString = Environment.GetEnvironmentVariable("blobConnectionString");
-        //    var blobsparepartstockStorageContainer = Environment.GetEnvironmentVariable("blobsparepartstockStorageContainer");
-        //    var container = new BlobContainerClient(blobConnectionString, blobsparepartstockStorageContainer);
-        //    container.CreateIfNotExists();
-
-        //    return container;
-        //}
-
-        //private static int VerifyDocument(Stream body, string documenttypesparepartstock)
-        //{
-        //    int resp = 0;
-
-        //    var reader = new StreamReader(body);
-        //    var lineNumber = 1;
-        //    var line = reader.ReadLine();
-        //    while (lineNumber <= 2)
-        //    {
-        //        //Verify document_type - first column
-        //        if (lineNumber == 2)
-        //        {
-        //            line = reader.ReadLine();
-
-        //            //Empty file
-        //            if (line == null)
-        //            {
-        //                return 1;
-        //            }
-        //            var parts = line.Split(',');
-
-        //            if (parts[0] != Environment.GetEnvironmentVariable("documenttypesparepartstock"))
-        //            {
-        //               return 1;
-        //            }
-                    
-        //        }
-        //        lineNumber++;
-        //    }
-
-        //    return resp;
-        //}
-        #endregion
     }
 }

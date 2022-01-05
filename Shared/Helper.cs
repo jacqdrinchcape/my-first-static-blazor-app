@@ -9,6 +9,15 @@ namespace BlazorApp.Shared
 {
     public class Helper
     {
+        public enum DocumentType
+        {
+            VehicleSales = 1,
+            WorkOrders = 2,
+            WorkOrderSpareParts = 3,
+            SparePartSales = 4,
+            SparePartStock = 5
+        }
+
         public static BlobContainerClient GetContainer(string blobContainer)
         {
             var blobConnectionString = Environment.GetEnvironmentVariable("blobConnectionString");
@@ -46,7 +55,7 @@ namespace BlazorApp.Shared
                     var parts = line.Split(',');
 
                     //Invalid Document Type
-                    if (parts[0] != Environment.GetEnvironmentVariable(documenttype))
+                    if (parts[0] != documenttype)
                     {
                         return 3;
                     }
@@ -57,8 +66,6 @@ namespace BlazorApp.Shared
 
             return resp;
         }
-
-
 
         public static string ErrorMessage(int errorCode)
         {
