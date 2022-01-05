@@ -132,7 +132,8 @@
         {
             using (StreamContent streamContent = new StreamContent(file.Data))
             {
-                var response = await Http.PostAsync(Settings.ConnAzureContWorkOrderSpareParts, streamContent);
+                //var response = await Http.PostAsync(Settings.ConnAzureContWorkOrderSpareParts, streamContent);
+                var response = await Http.PostAsync("/api/UploadWorkOrderSparePartsFileFunc", streamContent);
                 
                 if (response.IsSuccessStatusCode)
                 {

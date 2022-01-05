@@ -132,8 +132,9 @@
         {
             using (StreamContent streamContent = new StreamContent(file.Data))
             {
-                var response = await Http.PostAsync(Settings.ConnAzureContWorkOrders, streamContent);
-                
+                //var response = await Http.PostAsync(Settings.ConnAzureContWorkOrders, streamContent);
+                 var response = await Http.PostAsync("/api/UploadWorkOrdersFileFunc", streamContent);
+
                 if (response.IsSuccessStatusCode)
                 {
                     _fileUploadCount++;
