@@ -13,8 +13,8 @@ namespace BlazorApp.Shared
         {
             VehicleSales = 1,
             WorkOrders = 2,
-            WorkOrderSpareParts = 3,
-            SparePartSales = 4,
+            SparePartSales = 3,
+            WorkOrderSpareParts = 4,
             SparePartStock = 5
         }
 
